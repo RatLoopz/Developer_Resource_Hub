@@ -84,8 +84,8 @@ export function LinksProvider({ children }: { children: ReactNode }) {
 
         if (user?.id) {
           // User is authenticated: show active links OR user's own links
-          // Use parentheses for proper OR grouping
-          query = query.or(`(status.eq.active,user_id.eq.${user.id})`)
+          // Use proper syntax for OR filter
+          query = query.or(`status.eq.active,user_id.eq.${user.id}`)
         } else {
           // User is not authenticated: show only active links
           query = query.eq("status", "active")

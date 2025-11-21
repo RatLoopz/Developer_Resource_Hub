@@ -1,60 +1,76 @@
-# Developer_Resource_Hub
+<div align="center">
+  <h1>Developer Resource Hub</h1>
+  <p><em>A comprehensive platform for discovering, organizing, and sharing AI tools and developer resources</em></p>
+  <p>
+    <a href="#features">Features</a> •
+    <a href="#tech-stack">Tech Stack</a> •
+    <a href="#quick-start">Quick Start</a> •
+    <a href="#deployment">Deployment</a>
+  </p>
+</div>
 
-_A fully functional, responsive website for storing and organizing links to AI tools and useful websites with user authentication and admin management._
+---
 
-## Features
+## ✨ Features
 
-### User Features
+### 👤 User Features
 
-- **Authentication**: Email/password signup, login, and password reset
-- **Submit Links**: Authenticated users can submit AI tools and websites
-- **Browse & Search**: View all active links with full-text search
-- **Filter by Category**: Multi-select category filtering with "match all" or "match any" modes
-- **User Profile**: Manage personal profile information
-- **Real-time Updates**: See new links instantly via Supabase subscriptions
+- **🔐 Authentication**: Secure email/password signup, login, and password reset
+- **📝 Submit Links**: Authenticated users can submit AI tools and websites
+- **🔍 Browse & Search**: View all active links with powerful full-text search
+- **🏷️ Filter by Category**: Multi-select category filtering with "match all" or "match any" modes
+- **👤 User Profile**: Manage personal profile information
+- **⚡ Real-time Updates**: See new links instantly via Supabase subscriptions
 
-### Admin Features
+### 🛡️ Admin Features
 
-- **Admin Dashboard**: View all links (active, inactive, broken)
-- **Link Management**: Change link status or delete unworking tools
-- **User Management**: View user roles and permissions
-- **Real-time Monitoring**: See all changes across the platform instantly
+- **📊 Admin Dashboard**: View all links (active, inactive, broken)
+- **🔗 Link Management**: Change link status or delete unworking tools
+- **👥 User Management**: View user roles and permissions
+- **📈 Real-time Monitoring**: See all changes across the platform instantly
 
-## Tech Stack
+---
 
-- **Frontend**: Next.js 16 (App Router), React 19, TypeScript
-- **Styling**: Tailwind CSS v4, shadcn/ui components
-- **Authentication**: Supabase Auth (email/password)
-- **Database**: Supabase PostgreSQL with Row-Level Security
-- **Real-time**: Supabase Realtime subscriptions
-- **Deployment**: Vercel
+## 🛠️ Tech Stack
 
-## Quick Start
+| Component          | Technology                                                                                                                                                                                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Frontend**       | <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js" alt="Next.js"> <img src="https://img.shields.io/badge/React-19-blue?logo=react" alt="React"> <img src="https://img.shields.io/badge/TypeScript-blue?logo=typescript" alt="TypeScript"> |
+| **Styling**        | <img src="https://img.shields.io/badge/Tailwind%20CSS-4-38B2AC?logo=tailwindcss" alt="Tailwind CSS"> <img src="https://img.shields.io/badge/shadcn/ui-000000?logo=shadcnui" alt="shadcn/ui">                                                                 |
+| **Authentication** | <img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase" alt="Supabase Auth">                                                                                                                                                                   |
+| **Database**       | <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql" alt="PostgreSQL"> with Row-Level Security                                                                                                                                          |
+| **Real-time**      | <img src="https://img.shields.io/badge/Supabase%20Realtime-3ECF8E?logo=supabase" alt="Supabase Realtime">                                                                                                                                                    |
+| **Deployment**     | <img src="https://img.shields.io/badge/Vercel-000000?logo=vercel" alt="Vercel">                                                                                                                                                                              |
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
-- Supabase account (free tier works)
+- <img src="https://img.shields.io/badge/Node.js-18+-green?logo=node.js" alt="Node.js"> 18+
+- <img src="https://img.shields.io/badge/Supabase-Free%20Tier-3ECF8E?logo=supabase" alt="Supabase"> account (free tier works)
 
 ### Setup
 
 1. **Clone and install**
-   \`\`\`bash
-   git clone <repo-url>
-   cd ai-links-hub
+
+   ```bash
+   git clone https://github.com/yourusername/Developer_Resource_Hub.git
+   cd Developer_Resource_Hub
    npm install
-   \`\`\`
+   ```
 
 2. **Configure Supabase**
 
    - Create a project at [supabase.com](https://supabase.com)
    - Copy your Project URL and anon key from Settings > API
    - Create `.env.local`:
-     \`\`\`env
+     ```env
      NEXT_PUBLIC_SUPABASE_URL=your_url
      NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
      NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000
-     \`\`\`
+     ```
 
 3. **Run database migrations**
 
@@ -67,70 +83,56 @@ _A fully functional, responsive website for storing and organizing links to AI t
    - Sign up at `http://localhost:3000/auth/register`
    - Verify your email
    - In Supabase, run:
-     \`\`\`sql
+     ```sql
      UPDATE public.profiles SET role = 'admin' WHERE email = 'your-email@example.com';
-     \`\`\`
+     ```
 
 5. **Start development**
-   \`\`\`bash
+   ```bash
    npm run dev
-   \`\`\`
+   ```
    Open [http://localhost:3000](http://localhost:3000)
 
-## Project Structure
+---
 
-\`\`\`
+## 📁 Project Structure
+
+```
 app/
-├── page.tsx # Homepage with link grid
-├── auth/ # Authentication pages
+├── page.tsx               # Homepage with link grid
+├── auth/                  # Authentication pages
 │ ├── login/
 │ ├── register/
 │ ├── forgot-password/
 │ ├── reset-password/
 │ └── callback/
-├── admin/ # Admin dashboard (protected)
-├── profile/ # User profile (protected)
-└── submit-link/ # Link submission (protected)
+├── admin/                 # Admin dashboard (protected)
+├── profile/               # User profile (protected)
+└── submit-link/           # Link submission (protected)
 
 components/
-├── auth/user-menu.tsx # User dropdown
-├── links/ # Link display components
-├── filters-bar.tsx # Search & filter
-└── site-header.tsx # Navigation
+├── auth/user-menu.tsx     # User dropdown
+├── links/                 # Link display components
+├── filters-bar.tsx        # Search & filter
+└── site-header.tsx        # Navigation
 
-lib/supabase/ # Supabase clients & middleware
-scripts/ # Database migrations
-\`\`\`
+lib/supabase/              # Supabase clients & middleware
+scripts/                   # Database migrations
+```
 
-## Database Schema
+---
 
-### profiles
+## 🔒 Security
 
-- `id` (UUID, PK) - References auth.users
-- `email` (text)
-- `full_name` (text)
-- `role` (text) - 'user' or 'admin'
-- `created_at`, `updated_at`
+- **🛡️ Row-Level Security (RLS)**: All tables protected with RLS policies
+- **👤 User Isolation**: Users can only view/edit their own data
+- **👑 Admin Access**: Admins can manage all links
+- **✉️ Email Verification**: Required for account activation
+- **🔐 Password Reset**: Secure email-based password recovery
 
-### links
+---
 
-- `id` (UUID, PK)
-- `user_id` (UUID, FK)
-- `name`, `url`, `description` (text)
-- `categories` (text[])
-- `icon_url`, `icon_data_url` (text)
-- `status` (text) - 'active', 'inactive', or 'broken'
-- `created_at`, `updated_at`
-
-## Security
-
-- **Row-Level Security (RLS)**: All tables protected with RLS policies
-- **User Isolation**: Users can only view/edit their own data
-- **Admin Access**: Admins can manage all links
-- **Email Verification**: Required for account activation
-- **Password Reset**: Secure email-based password recovery
-
-## Deployment
+## 🌐 Deployment
 
 ### Deploy to Vercel
 
@@ -141,54 +143,37 @@ scripts/ # Database migrations
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 4. Deploy
 
-## User Flows
+---
 
-### Registration
+## 🧩 Troubleshooting
 
-1. User signs up with email/password
-2. Verification email sent
-3. User clicks link to verify
-4. Account activated, can now submit links
-
-### Submitting a Link
-
-1. Authenticated user clicks "Submit Link"
-2. Fills form: name, URL, description, categories, icon
-3. Link created with status 'active'
-4. Appears immediately on homepage
-
-### Admin Management
-
-1. Admin logs in → User menu → "Admin Dashboard"
-2. View all links with their status
-3. Change status to 'broken' or delete
-4. Non-admins won't see broken links
-
-## Troubleshooting
-
-**"User not authenticated"**
+### "User not authenticated"
 
 - Verify email is confirmed
 - Check Supabase session is valid
 - Try logging out and back in
 
-**Links not appearing**
+### Links not appearing
 
 - Ensure link status is 'active'
 - Check RLS policies in Supabase
 - Check browser console for errors
 
-**Admin dashboard not accessible**
+### Admin dashboard not accessible
 
 - Verify user role is 'admin' in profiles table
 - Log out and back in
 
-## Support
+---
 
-- [Supabase Docs](https://supabase.com/docs)
-- [Next.js Docs](https://nextjs.org/docs)
-- [shadcn/ui](https://ui.shadcn.com)
+## 📚 Resources & Support
 
-## License
+- <img src="https://img.shields.io/badge/Supabase-Docs-3ECF8E?logo=supabase" alt="Supabase Docs"> [Supabase Docs](https://supabase.com/docs)
+- <img src="https://img.shields.io/badge/Next.js-Docs-black?logo=next.js" alt="Next.js Docs"> [Next.js Docs](https://nextjs.org/docs)
+- <img src="https://img.shields.io/badge/shadcn/ui-Documentation-000000?logo=shadcnui" alt="shadcn/ui"> [shadcn/ui](https://ui.shadcn.com)
 
-MIT
+---
+
+## 📄 License
+
+<img src="https://img.shields.io/badge/License-MIT-green" alt="License"> MIT
