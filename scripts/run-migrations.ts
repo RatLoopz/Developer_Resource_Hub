@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 async function runMigrations() {
   const supabase = await createClient()
 
-  console.log("[v0] Running database migrations...")
+  console.log("Running database migrations...")
 
   try {
     // Read and execute the SQL migration
@@ -134,13 +134,13 @@ create trigger on_auth_user_created
     const { error } = await supabase.rpc("exec", { sql: migrationSQL })
 
     if (error) {
-      console.error("[v0] Migration error:", error)
+      console.error("Migration error:", error)
       throw error
     }
 
-    console.log("[v0] Migrations completed successfully!")
+    console.log("Migrations completed successfully!")
   } catch (error) {
-    console.error("[v0] Failed to run migrations:", error)
+    console.error("Failed to run migrations:", error)
     throw error
   }
 }

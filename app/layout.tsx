@@ -8,7 +8,7 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "AI Link Hub",
   description: "Central hub for storing and organizing links to AI tools and useful websites",
-  generator: "v0.app",
+  generator: "Next.js",
 }
 
 export default function RootLayout({

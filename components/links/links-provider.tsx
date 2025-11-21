@@ -47,7 +47,7 @@ export function LinksProvider({ children }: { children: ReactNode }) {
         setLoading(true)
 
         if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-          console.error("[v0] Missing Supabase environment variables")
+          console.error("Missing Supabase environment variables")
           setLoading(false)
           return
         }
@@ -94,7 +94,7 @@ export function LinksProvider({ children }: { children: ReactNode }) {
         const { data: links, error } = await query.order("created_at", { ascending: false })
 
         if (error) {
-          console.error("[v0] Supabase error:", error.message, error.code)
+          console.error("Supabase error:", error.message, error.code)
           setLoading(false)
           return
         }
@@ -109,7 +109,7 @@ export function LinksProvider({ children }: { children: ReactNode }) {
           categories,
         })
       } catch (error) {
-        console.error("[v0] Error loading links:", error instanceof Error ? error.message : String(error))
+        console.error("Error loading links:", error instanceof Error ? error.message : String(error))
       } finally {
         setLoading(false)
       }
@@ -155,7 +155,7 @@ export function LinksProvider({ children }: { children: ReactNode }) {
 
         if (error) throw error
       } catch (error) {
-        console.error("[v0] Error adding link:", error)
+        console.error("Error adding link:", error)
         throw error
       }
     },
@@ -172,7 +172,7 @@ export function LinksProvider({ children }: { children: ReactNode }) {
 
         if (error) throw error
       } catch (error) {
-        console.error("[v0] Error updating link:", error)
+        console.error("Error updating link:", error)
         throw error
       }
     },
@@ -186,7 +186,7 @@ export function LinksProvider({ children }: { children: ReactNode }) {
 
         if (error) throw error
       } catch (error) {
-        console.error("[v0] Error deleting link:", error)
+        console.error("Error deleting link:", error)
         throw error
       }
     },
