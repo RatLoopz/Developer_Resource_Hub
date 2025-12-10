@@ -274,7 +274,7 @@ graph TD
 
 ### Deploy to Vercel
 
-<div align="center">
+<div>
 
 ```bash
 # 1. Push your code to GitHub
