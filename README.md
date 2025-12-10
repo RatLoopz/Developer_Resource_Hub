@@ -7,10 +7,6 @@
     <a href="#setup-guide">Setup Guide</a> •
     <a href="#deployment">Deployment</a>
   </p>
-  <img src="https://img.shields.io/github/license/yourusername/Developer_Resource_Hub?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/github/stars/yourusername/Developer_Resource_Hub?style=for-the-badge" alt="Stars">
-  <img src="https://img.shields.io/github/forks/yourusername/Developer_Resource_Hub?style=for-the-badge" alt="Forks">
-  <img src="https://img.shields.io/github/issues/yourusername/Developer_Resource_Hub?style=for-the-badge" alt="Issues">
 </div>
 
 ---
@@ -19,36 +15,36 @@
 
 ### 👤 User Features
 
-| Feature | Description |
-|---------|-------------|
-| **🔐 Authentication** | Secure email/password signup, login, and password reset |
-| **📝 Submit Links** | Authenticated users can submit AI tools and websites |
-| **🔍 Browse & Search** | View all active links with powerful full-text search |
+| Feature                   | Description                                                           |
+| ------------------------- | --------------------------------------------------------------------- |
+| **🔐 Authentication**     | Secure email/password signup, login, and password reset               |
+| **📝 Submit Links**       | Authenticated users can submit AI tools and websites                  |
+| **🔍 Browse & Search**    | View all active links with powerful full-text search                  |
 | **🏷️ Filter by Category** | Multi-select category filtering with "match all" or "match any" modes |
-| **👤 User Profile** | Manage personal profile information |
-| **⚡ Real-time Updates** | See new links instantly via Supabase subscriptions |
+| **👤 User Profile**       | Manage personal profile information                                   |
+| **⚡ Real-time Updates**  | See new links instantly via Supabase subscriptions                    |
 
 ### 🛡️ Admin Features
 
-| Feature | Description |
-|---------|-------------|
-| **📊 Admin Dashboard** | View all links (active, inactive, broken) |
-| **🔗 Link Management** | Change link status or delete unworking tools |
-| **👥 User Management** | View user roles and permissions |
+| Feature                     | Description                                   |
+| --------------------------- | --------------------------------------------- |
+| **📊 Admin Dashboard**      | View all links (active, inactive, broken)     |
+| **🔗 Link Management**      | Change link status or delete unworking tools  |
+| **👥 User Management**      | View user roles and permissions               |
 | **📈 Real-time Monitoring** | See all changes across the platform instantly |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component          | Technology                                                                                                                                                                                                                                                   |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Component          | Technology                                                                                                                                                                                                                                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Frontend**       | <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js&style=for-the-badge" alt="Next.js"> <img src="https://img.shields.io/badge/React-19-blue?logo=react&style=for-the-badge" alt="React"> <img src="https://img.shields.io/badge/TypeScript-blue?logo=typescript&style=for-the-badge" alt="TypeScript"> |
-| **Styling**        | <img src="https://img.shields.io/badge/Tailwind%20CSS-4-38B2AC?logo=tailwindcss&style=for-the-badge" alt="Tailwind CSS"> <img src="https://img.shields.io/badge/shadcn/ui-000000?logo=shadcnui&style=for-the-badge" alt="shadcn/ui">                                                                 |
-| **Authentication** | <img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&style=for-the-badge" alt="Supabase Auth">                                                                                                                                                                   |
-| **Database**       | <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&style=for-the-badge" alt="PostgreSQL"> with Row-Level Security                                                                                                                                          |
-| **Real-time**      | <img src="https://img.shields.io/badge/Supabase%20Realtime-3ECF8E?logo=supabase&style=for-the-badge" alt="Supabase Realtime">                                                                                                                                                    |
-| **Deployment**     | <img src="https://img.shields.io/badge/Vercel-000000?logo=vercel&style=for-the-badge" alt="Vercel">                                                                                                                                                                              |
+| **Styling**        | <img src="https://img.shields.io/badge/Tailwind%20CSS-4-38B2AC?logo=tailwindcss&style=for-the-badge" alt="Tailwind CSS"> <img src="https://img.shields.io/badge/shadcn/ui-000000?logo=shadcnui&style=for-the-badge" alt="shadcn/ui">                                                                                     |
+| **Authentication** | <img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&style=for-the-badge" alt="Supabase Auth">                                                                                                                                                                                                           |
+| **Database**       | <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&style=for-the-badge" alt="PostgreSQL"> with Row-Level Security                                                                                                                                                                                  |
+| **Real-time**      | <img src="https://img.shields.io/badge/Supabase%20Realtime-3ECF8E?logo=supabase&style=for-the-badge" alt="Supabase Realtime">                                                                                                                                                                                            |
+| **Deployment**     | <img src="https://img.shields.io/badge/Vercel-000000?logo=vercel&style=for-the-badge" alt="Vercel">                                                                                                                                                                                                                      |
 
 ---
 
@@ -131,6 +127,7 @@ Inside your Supabase project, at the top bar you'll see something like:
 Click Connect.
 
 Choose:
+
 - App Frameworks → Next.js
 - With App Router
 - Using supabase-js
@@ -260,13 +257,13 @@ graph TD
 
 ## 🔒 Security
 
-| Security Feature | Description |
-|------------------|-------------|
-| **🛡️ Row-Level Security (RLS)** | All tables protected with RLS policies |
-| **👤 User Isolation** | Users can only view/edit their own data |
-| **👑 Admin Access** | Admins can manage all links |
-| **✉️ Email Verification** | Required for account activation |
-| **🔐 Password Reset** | Secure email-based password recovery |
+| Security Feature                | Description                             |
+| ------------------------------- | --------------------------------------- |
+| **🛡️ Row-Level Security (RLS)** | All tables protected with RLS policies  |
+| **👤 User Isolation**           | Users can only view/edit their own data |
+| **👑 Admin Access**             | Admins can manage all links             |
+| **✉️ Email Verification**       | Required for account activation         |
+| **🔐 Password Reset**           | Secure email-based password recovery    |
 
 ---
 
