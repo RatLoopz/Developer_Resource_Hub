@@ -60,7 +60,7 @@
 
 ### Step 1: Clone and Install Dependencies
 
-<div align="center">
+<div>
 
 ```bash
 # Clone the repository
