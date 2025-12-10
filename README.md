@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Developer Resource Hub</h1>
+  <h1><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Books.webp" alt="Books" width="40" height="40"> Developer Resource Hub <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Books.webp" alt="Books" width="40" height="40"></h1>
   <p><em>A comprehensive platform for discovering, organizing, and sharing AI tools and developer resources</em></p>
   <p>
     <a href="#features">Features</a> •
@@ -7,6 +7,10 @@
     <a href="#setup-guide">Setup Guide</a> •
     <a href="#deployment">Deployment</a>
   </p>
+  <img src="https://img.shields.io/github/license/yourusername/Developer_Resource_Hub?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/github/stars/yourusername/Developer_Resource_Hub?style=for-the-badge" alt="Stars">
+  <img src="https://img.shields.io/github/forks/yourusername/Developer_Resource_Hub?style=for-the-badge" alt="Forks">
+  <img src="https://img.shields.io/github/issues/yourusername/Developer_Resource_Hub?style=for-the-badge" alt="Issues">
 </div>
 
 ---
@@ -15,19 +19,23 @@
 
 ### 👤 User Features
 
-- **🔐 Authentication**: Secure email/password signup, login, and password reset
-- **📝 Submit Links**: Authenticated users can submit AI tools and websites
-- **🔍 Browse & Search**: View all active links with powerful full-text search
-- **🏷️ Filter by Category**: Multi-select category filtering with "match all" or "match any" modes
-- **👤 User Profile**: Manage personal profile information
-- **⚡ Real-time Updates**: See new links instantly via Supabase subscriptions
+| Feature | Description |
+|---------|-------------|
+| **🔐 Authentication** | Secure email/password signup, login, and password reset |
+| **📝 Submit Links** | Authenticated users can submit AI tools and websites |
+| **🔍 Browse & Search** | View all active links with powerful full-text search |
+| **🏷️ Filter by Category** | Multi-select category filtering with "match all" or "match any" modes |
+| **👤 User Profile** | Manage personal profile information |
+| **⚡ Real-time Updates** | See new links instantly via Supabase subscriptions |
 
 ### 🛡️ Admin Features
 
-- **📊 Admin Dashboard**: View all links (active, inactive, broken)
-- **🔗 Link Management**: Change link status or delete unworking tools
-- **👥 User Management**: View user roles and permissions
-- **📈 Real-time Monitoring**: See all changes across the platform instantly
+| Feature | Description |
+|---------|-------------|
+| **📊 Admin Dashboard** | View all links (active, inactive, broken) |
+| **🔗 Link Management** | Change link status or delete unworking tools |
+| **👥 User Management** | View user roles and permissions |
+| **📈 Real-time Monitoring** | See all changes across the platform instantly |
 
 ---
 
@@ -35,12 +43,12 @@
 
 | Component          | Technology                                                                                                                                                                                                                                                   |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Frontend**       | <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js" alt="Next.js"> <img src="https://img.shields.io/badge/React-19-blue?logo=react" alt="React"> <img src="https://img.shields.io/badge/TypeScript-blue?logo=typescript" alt="TypeScript"> |
-| **Styling**        | <img src="https://img.shields.io/badge/Tailwind%20CSS-4-38B2AC?logo=tailwindcss" alt="Tailwind CSS"> <img src="https://img.shields.io/badge/shadcn/ui-000000?logo=shadcnui" alt="shadcn/ui">                                                                 |
-| **Authentication** | <img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase" alt="Supabase Auth">                                                                                                                                                                   |
-| **Database**       | <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql" alt="PostgreSQL"> with Row-Level Security                                                                                                                                          |
-| **Real-time**      | <img src="https://img.shields.io/badge/Supabase%20Realtime-3ECF8E?logo=supabase" alt="Supabase Realtime">                                                                                                                                                    |
-| **Deployment**     | <img src="https://img.shields.io/badge/Vercel-000000?logo=vercel" alt="Vercel">                                                                                                                                                                              |
+| **Frontend**       | <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js&style=for-the-badge" alt="Next.js"> <img src="https://img.shields.io/badge/React-19-blue?logo=react&style=for-the-badge" alt="React"> <img src="https://img.shields.io/badge/TypeScript-blue?logo=typescript&style=for-the-badge" alt="TypeScript"> |
+| **Styling**        | <img src="https://img.shields.io/badge/Tailwind%20CSS-4-38B2AC?logo=tailwindcss&style=for-the-badge" alt="Tailwind CSS"> <img src="https://img.shields.io/badge/shadcn/ui-000000?logo=shadcnui&style=for-the-badge" alt="shadcn/ui">                                                                 |
+| **Authentication** | <img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&style=for-the-badge" alt="Supabase Auth">                                                                                                                                                                   |
+| **Database**       | <img src="https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&style=for-the-badge" alt="PostgreSQL"> with Row-Level Security                                                                                                                                          |
+| **Real-time**      | <img src="https://img.shields.io/badge/Supabase%20Realtime-3ECF8E?logo=supabase&style=for-the-badge" alt="Supabase Realtime">                                                                                                                                                    |
+| **Deployment**     | <img src="https://img.shields.io/badge/Vercel-000000?logo=vercel&style=for-the-badge" alt="Vercel">                                                                                                                                                                              |
 
 ---
 
@@ -48,11 +56,15 @@
 
 ### Prerequisites
 
-- <img src="https://img.shields.io/badge/Node.js-18+-green?logo=node.js" alt="Node.js"> 18+
-- <img src="https://img.shields.io/badge/Git-F05032?logo=git" alt="Git"> installed
-- <img src="https://img.shields.io/badge/Supabase-Free%20Tier-3ECF8E?logo=supabase" alt="Supabase"> account (free tier works)
+<div align="center">
+  <img src="https://img.shields.io/badge/Node.js-18+-green?logo=node.js&style=for-the-badge" alt="Node.js">
+  <img src="https://img.shields.io/badge/Git-F05032?logo=git&style=for-the-badge" alt="Git">
+  <img src="https://img.shields.io/badge/Supabase-Free%20Tier-3ECF8E?logo=supabase&style=for-the-badge" alt="Supabase">
+</div>
 
 ### Step 1: Clone and Install Dependencies
+
+<div align="center">
 
 ```bash
 # Clone the repository
@@ -65,16 +77,26 @@ cd Developer_Resource_Hub
 npm install
 ```
 
+</div>
+
 ### Step 2: Set Up Supabase
 
 #### 2.1 Create a Supabase Account
+
+<details>
+<summary>Click to expand</summary>
 
 1. Visit [supabase.com](https://supabase.com)
 2. Click "Start your project" or "Sign Up"
 3. Sign up using your GitHub account or email
 4. Verify your email if required
 
+</details>
+
 #### 2.2 Create a New Project
+
+<details>
+<summary>Click to expand</summary>
 
 1. After signing in, click "New Project"
 2. Select your organization (or create a new one)
@@ -85,9 +107,12 @@ npm install
 4. Click "Create new project"
 5. Wait for the project to be set up (this may take a few minutes)
 
+</details>
+
 #### 2.3 Get Your Supabase Credentials
 
-##### Option A — From Settings → API
+<details>
+<summary>Option A — From Settings → API</summary>
 
 1. Once your project is ready, navigate to **Settings** > **API**
 2. You'll find your credentials under the "Project API keys" section:
@@ -95,7 +120,10 @@ npm install
    - **anon public**: A long JWT token starting with `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
    - **service_role**: Another JWT token (keep this secret)
 
-##### Option B — From Connect → Next.js
+</details>
+
+<details>
+<summary>Option B — From Connect → Next.js</summary>
 
 Inside your Supabase project, at the top bar you'll see something like:
 `developer_resource_hub / main / Production / Connect`
@@ -113,6 +141,8 @@ Supabase will show you a block like:
 These are the exact two values you need for this project.
 
 ✅ You do not need to copy any other connection strings for this app to work locally.
+
+</details>
 
 ### Step 3: Configure Environment Variables
 
@@ -203,38 +233,40 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 
 ## 📁 Project Structure
 
-```
-app/
-├── page.tsx               # Homepage with link grid
-├── auth/                  # Authentication pages
-│ ├── login/
-│ ├── register/
-│ ├── forgot-password/
-│ ├── reset-password/
-│ └── callback/
-├── admin/                 # Admin dashboard (protected)
-├── profile/               # User profile (protected)
-└── submit-link/           # Link submission (protected)
+```mermaid
+graph TD
+    A[app/] --> B[page.tsx]
+    A --> C[auth/]
+    A --> D[admin/]
+    A --> E[profile/]
+    A --> F[submit-link/]
 
-components/
-├── auth/user-menu.tsx     # User dropdown
-├── links/                 # Link display components
-├── filters-bar.tsx        # Search & filter
-└── site-header.tsx        # Navigation
+    C --> G[login/]
+    C --> H[register/]
+    C --> I[forgot-password/]
+    C --> J[reset-password/]
+    C --> K[callback/]
 
-lib/supabase/              # Supabase clients & middleware
-scripts/                   # Database migrations
+    L[components/] --> M[auth/user-menu.tsx]
+    L --> N[links/]
+    L --> O[filters-bar.tsx]
+    L --> P[site-header.tsx]
+
+    Q[lib/supabase/]
+    R[scripts/]
 ```
 
 ---
 
 ## 🔒 Security
 
-- **🛡️ Row-Level Security (RLS)**: All tables protected with RLS policies
-- **👤 User Isolation**: Users can only view/edit their own data
-- **👑 Admin Access**: Admins can manage all links
-- **✉️ Email Verification**: Required for account activation
-- **🔐 Password Reset**: Secure email-based password recovery
+| Security Feature | Description |
+|------------------|-------------|
+| **🛡️ Row-Level Security (RLS)** | All tables protected with RLS policies |
+| **👤 User Isolation** | Users can only view/edit their own data |
+| **👑 Admin Access** | Admins can manage all links |
+| **✉️ Email Verification** | Required for account activation |
+| **🔐 Password Reset** | Secure email-based password recovery |
 
 ---
 
@@ -242,50 +274,93 @@ scripts/                   # Database migrations
 
 ### Deploy to Vercel
 
-1. Push your code to GitHub
-2. Import repository on [vercel.com](https://vercel.com)
-3. Add environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Deploy
+<div align="center">
+
+```bash
+# 1. Push your code to GitHub
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+
+# 2. Import repository on https://vercel.com
+# 3. Add environment variables:
+#    - NEXT_PUBLIC_SUPABASE_URL
+#    - NEXT_PUBLIC_SUPABASE_ANON_KEY
+# 4. Deploy
+```
+
+</div>
 
 ---
 
 ## 🧩 Troubleshooting
 
-### "User not authenticated"
+<details>
+<summary>"User not authenticated"</summary>
 
 - Verify email is confirmed
 - Check Supabase session is valid
 - Try logging out and back in
 
-### Links not appearing
+</details>
+
+<details>
+<summary>Links not appearing</summary>
 
 - Ensure link status is 'active'
 - Check RLS policies in Supabase
 - Check browser console for errors
 
-### Admin dashboard not accessible
+</details>
+
+<details>
+<summary>Admin dashboard not accessible</summary>
 
 - Verify user role is 'admin' in profiles table
 - Log out and back in
 
-### Database Connection Issues
+</details>
+
+<details>
+<summary>Database Connection Issues</summary>
 
 - Verify your Supabase credentials in `.env.local`
 - Check if your database is paused in Supabase dashboard
 - Ensure your SQL scripts ran successfully
 
+</details>
+
 ---
 
 ## 📚 Resources & Support
 
-- <img src="https://img.shields.io/badge/Supabase-Docs-3ECF8E?logo=supabase" alt="Supabase Docs"> [Supabase Docs](https://supabase.com/docs)
-- <img src="https://img.shields.io/badge/Next.js-Docs-black?logo=next.js" alt="Next.js Docs"> [Next.js Docs](https://nextjs.org/docs)
-- <img src="https://img.shields.io/badge/shadcn/ui-Documentation-000000?logo=shadcnui" alt="shadcn/ui"> [shadcn/ui](https://ui.shadcn.com)
+<div align="center">
+
+<a href="https://supabase.com/docs">
+  <img src="https://img.shields.io/badge/Supabase-Docs-3ECF8E?logo=supabase&style=for-the-badge" alt="Supabase Docs">
+</a>
+<a href="https://nextjs.org/docs">
+  <img src="https://img.shields.io/badge/Next.js-Docs-black?logo=next.js&style=for-the-badge" alt="Next.js Docs">
+</a>
+<a href="https://ui.shadcn.com">
+  <img src="https://img.shields.io/badge/shadcn/ui-Documentation-000000?logo=shadcnui&style=for-the-badge" alt="shadcn/ui">
+</a>
+
+</div>
 
 ---
 
 ## 📄 License
 
-<img src="https://img.shields.io/badge/License-MIT-green" alt="License"> MIT
+<div align="center">
+
+<img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License"> MIT
+
+</div>
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by the Developer Resource Hub Team</p>
+  <p>⭐ Star this repo if it helped you!</p>
+</div>
