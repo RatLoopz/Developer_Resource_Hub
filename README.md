@@ -133,7 +133,10 @@ Choose:
 - Using supabase-js
 
 Supabase will show you a block like:
-`NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key`
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
 These are the exact two values you need for this project.
 
