@@ -4,7 +4,7 @@
   <p>
     <a href="#features">Features</a> •
     <a href="#tech-stack">Tech Stack</a> •
-    <a href="#quick-start">Quick Start</a> •
+    <a href="#setup-guide">Setup Guide</a> •
     <a href="#deployment">Deployment</a>
   </p>
 </div>
@@ -44,54 +44,160 @@
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Setup Guide
 
 ### Prerequisites
 
 - <img src="https://img.shields.io/badge/Node.js-18+-green?logo=node.js" alt="Node.js"> 18+
+- <img src="https://img.shields.io/badge/Git-F05032?logo=git" alt="Git"> installed
 - <img src="https://img.shields.io/badge/Supabase-Free%20Tier-3ECF8E?logo=supabase" alt="Supabase"> account (free tier works)
 
-### Setup
+### Step 1: Clone and Install Dependencies
 
-1. **Clone and install**
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/Developer_Resource_Hub.git
 
-   ```bash
-   git clone https://github.com/yourusername/Developer_Resource_Hub.git
-   cd Developer_Resource_Hub
-   npm install
-   ```
+# Navigate into the project directory
+cd Developer_Resource_Hub
 
-2. **Configure Supabase**
+# Install dependencies
+npm install
+```
 
-   - Create a project at [supabase.com](https://supabase.com)
-   - Copy your Project URL and anon key from Settings > API
-   - Create `.env.local`:
-     ```env
-     NEXT_PUBLIC_SUPABASE_URL=your_url
-     NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
-     NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000
-     ```
+### Step 2: Set Up Supabase
 
-3. **Run database migrations**
+#### 2.1 Create a Supabase Account
 
-   - Go to Supabase SQL Editor
-   - Copy contents of `scripts/001_create_tables.sql`
-   - Execute the SQL
+1. Visit [supabase.com](https://supabase.com)
+2. Click "Start your project" or "Sign Up"
+3. Sign up using your GitHub account or email
+4. Verify your email if required
 
-4. **Create admin user**
+#### 2.2 Create a New Project
 
-   - Sign up at `http://localhost:3000/auth/register`
-   - Verify your email
-   - In Supabase, run:
-     ```sql
-     UPDATE public.profiles SET role = 'admin' WHERE email = 'your-email@example.com';
-     ```
+1. After signing in, click "New Project"
+2. Select your organization (or create a new one)
+3. Fill in the project details:
+   - **Project Name**: Developer Resource Hub (or your preferred name)
+   - **Database Password**: Create a strong password and save it securely
+   - **Region**: Choose the region closest to you
+4. Click "Create new project"
+5. Wait for the project to be set up (this may take a few minutes)
 
-5. **Start development**
+#### 2.3 Get Your Supabase Credentials
+
+##### Option A — From Settings → API
+
+1. Once your project is ready, navigate to **Settings** > **API**
+2. You'll find your credentials under the "Project API keys" section:
+   - **Project URL**: Something like `https://xxxxxxxxxxxxx.supabase.co`
+   - **anon public**: A long JWT token starting with `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+   - **service_role**: Another JWT token (keep this secret)
+
+##### Option B — From Connect → Next.js
+
+Inside your Supabase project, at the top bar you'll see something like:
+`developer_resource_hub / main / Production / Connect`
+
+Click Connect.
+
+Choose:
+- App Frameworks → Next.js
+- With App Router
+- Using supabase-js
+
+Supabase will show you a block like:
+`NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key`
+
+These are the exact two values you need for this project.
+
+✅ You do not need to copy any other connection strings for this app to work locally.
+
+### Step 3: Configure Environment Variables
+
+1. In the root directory of your project, create a new file named `.env.local`
+2. Add the following environment variables to your `.env.local` file:
+
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000
+```
+
+> **Note**: Replace the placeholder values with your actual Supabase credentials. The database connection strings are optional for most use cases but included for completeness.
+
+### Step 4: Set Up Database Tables
+
+#### 4.1 Access the SQL Editor
+
+1. In your Supabase dashboard, navigate to **SQL Editor** in the left sidebar
+2. Click on "New query" to open a new SQL editor window
+
+#### 4.2 Create Database Tables
+
+1. Open the `scripts/001_create_tables.sql` file in your local project
+2. Copy the entire content of the file
+3. Paste it into the Supabase SQL Editor
+4. Click "Run" to execute the SQL script
+5. Wait for the script to complete (you should see a success message)
+
+This script will create:
+
+- A `profiles` table that extends the `auth.users` table
+- A `links` table for storing resource links
+- Row Level Security (RLS) policies for both tables
+- Triggers to automatically create a profile when a new user signs up
+
+### Step 5: Create an Admin User
+
+#### 5.1 Sign Up a New User
+
+1. Start your development server (if not already running):
    ```bash
    npm run dev
    ```
-   Open [http://localhost:3000](http://localhost:3000)
+2. Open [http://localhost:3000](http://localhost:3000) in your browser
+3. Navigate to the registration page or use `/auth/register`
+4. Create a new account with your email and a secure password
+5. Check your email for a verification link and click it to verify your account
+
+#### 5.2 Grant Admin Privileges
+
+1. Go back to the Supabase dashboard
+2. Navigate to **SQL Editor** and open a new query
+3. Run the following SQL to grant admin privileges to your user:
+
+```sql
+UPDATE public.profiles
+SET role = 'admin'
+WHERE email = 'your-email@example.com';
+```
+
+Replace `your-email@example.com` with the email you used to register.
+
+4. Verify the admin role was assigned:
+
+```sql
+SELECT id, email, role FROM public.profiles WHERE email = 'your-email@example.com';
+```
+
+You should see your email with the role set to `admin`.
+
+### Step 6: Run the Application
+
+Now you're ready to run the application:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application running.
+
+- You can sign in with your admin account
+- Access the admin dashboard at `/admin`
+- Start adding and managing resources
 
 ---
 
@@ -136,7 +242,7 @@ scripts/                   # Database migrations
 
 ### Deploy to Vercel
 
-1. Push to GitHub
+1. Push your code to GitHub
 2. Import repository on [vercel.com](https://vercel.com)
 3. Add environment variables:
    - `NEXT_PUBLIC_SUPABASE_URL`
@@ -163,6 +269,12 @@ scripts/                   # Database migrations
 
 - Verify user role is 'admin' in profiles table
 - Log out and back in
+
+### Database Connection Issues
+
+- Verify your Supabase credentials in `.env.local`
+- Check if your database is paused in Supabase dashboard
+- Ensure your SQL scripts ran successfully
 
 ---
 
