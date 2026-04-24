@@ -1,254 +1,126 @@
-# 🤖 Telegram Bot → Reels Vault Integration Guide
+# 🤖 Telegram Bot → Reels Vault Integration Guide (v3.0 Multi-User)
 
-> **Goal:** Instagram par reel dekho → Telegram bot ko link bhejo → Apne aap vault mein save ho jaye.  
-> **Learning Goal:** Aage bhi aise koi bot banana ho toh yahi steps follow karo.
+> **Pro Goal:** Instagram par reel dekho → Telegram bot ko link bhejo → Woh aapke **personal vault** mein apne aap save ho jaye.  
+> **Key Upgrade:** Ab koi bhi registered user bot ko apne account ke saath link kar sakta hai!
 
 ---
 
-## 🧠 Architecture (Pehle samjho, phir karo)
+## 🧠 Architecture (Multi-User System)
 
 ```
-[You on Phone]
+[User on Website]
      │
-     │ Share/Paste reel link
-     ▼
-[Telegram Bot]
+     └─► Profile Page → Generate Unique Token (DRH-A1B2C)
+             │
+[User on Telegram]
      │
-     │ HTTPS POST (webhook)
-     ▼
-[Your Next.js App]  ← /api/telegram/webhook/route.ts
+     └─► Send: /start DRH-A1B2C
+             │
+[Next.js Backend]
      │
-     ├─► Microlink API  (fetch title + thumbnail)
+     ├─► Verify Token → Match with User Profile
+     ├─► Save Telegram ID in DB (Account Linked ✅)
      │
-     └─► Supabase DB   (insert into reels table)
+[Future Interaction]
+     │
+     └─► Paste Reel Link → Bot identifies user via DB lookup → Saves to THEIR vault.
 ```
 
-**Key concept — Webhook vs Polling:**
-- **Polling:** Bot repeatedly asks Telegram "koi message aaya?" (slow, resource-heavy)
-- **Webhook:** Telegram khud aapke server ko call karta hai jab message aata hai (instant, preferred ✅)
-
 ---
 
-## 📋 Step 1 — Telegram Bot Banao (@BotFather)
+## 📋 Step 1 — Initial Env Setup
 
-1. Telegram open karo, search karo **`@BotFather`** (blue tick wala)
-2. Send karo: `/newbot`
-3. BotFather puchega:
-   - **Name:** `Reels Vault Bot` (display name, kuch bhi)
-   - **Username:** `reelsvault_bot` (unique, `_bot` se end hona chahiye)
-4. BotFather dega: `HTTP API Token` — yeh save karo!
-
-```
-Example token: 7412936541:AAF_xK9mVz2qnBLsomething_long_string
-```
-
-> [!IMPORTANT]
-> Yeh token secret hai — kabhi GitHub par push mat karo!
-
----
-
-## 📋 Step 2 — Apna Telegram User ID Pata Karo
-
-Yeh important hai taaki sirf aap hi bot use kar sako (security).
-
-1. Telegram par search karo **`@userinfobot`**
-2. `/start` bhejo
-3. Woh reply karega: `Id: 123456789` — yeh note karo
-
----
-
-## 📋 Step 3 — Supabase Service Role Key Lao
-
-Admin panel mein RLS bypass karne ke liye service role key chahiye (bot ke paas user session nahi hoti).
-
-1. **[Supabase Dashboard](https://supabase.com/dashboard)** → Apna project → **Settings → API**
-2. `service_role` key copy karo (yeh bhi secret hai!)
-
----
-
-## 📋 Step 4 — BOT_DEFAULT_USER_ID Nikalo
-
-Bot jab reel save karega, usse ek `user_id` chahiye (database `NOT NULL` constraint).  
-Apna Supabase user ID lo:
-
-1. Supabase Dashboard → **Authentication → Users**
-2. Apna account dhundo → UUID copy karo
-3. Yahi `BOT_DEFAULT_USER_ID` banega
-
----
-
-## 📋 Step 5 — `.env.local` Update Karo
+Puranay single-user env vars ko delete karein aur sirf basics rakhein:
 
 ```bash
-# File: /mnt/data2/RatLoopz/Developer_Resource_Hub/.env.local
+# File: .env.local (Sync with Vercel as well)
 
-# (Already existing)
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+# Supabase Auth & DB
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=... # Important: For bot backend
 
-# (NEW — add these)
-SUPABASE_SERVICE_ROLE_KEY=eyJ...your_service_role_key...
-TELEGRAM_BOT_TOKEN=7412936541:AAF_xK9mVz...
-TELEGRAM_SECRET_TOKEN=mera_random_secret_123   # kuch bhi type karo, yaad rakhna
-TELEGRAM_ALLOWED_USER_ID=123456789             # Step 2 se mila number
-BOT_DEFAULT_USER_ID=uuid-from-supabase-auth    # Step 4 se mila UUID
-```
+# Telegram Credentials (@BotFather se)
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_BOT_USERNAME=reelsvault_bot
 
-> [!CAUTION]
-> `.env.local` gitignore mein hai — safe hai. Lekin production deploy karte waqt yeh env vars **Vercel/platform ke dashboard** mein set karne padte hain.
-
----
-
-## 📋 Step 6 — Code Already Ready Hai ✅
-
-Webhook route already bana diya hai:
-
-📄 [`app/api/telegram/webhook/route.ts`](file:///mnt/data2/RatLoopz/Developer_Resource_Hub/app/api/telegram/webhook/route.ts)
-
-**Yeh kya karta hai:**
-1. Telegram ka secret token verify karta hai (unauthorized requests block)
-2. Message mein Instagram URL dhundhta hai (regex se)
-3. Sirf aapka Telegram ID allow karta hai
-4. Microlink se title + thumbnail fetch karta hai
-5. Supabase mein save karta hai
-6. Telegram par confirm reply bhejta hai ✅ / ❌
-
----
-
-## 📋 Step 7 — App Deploy Karo (Webhook needs public HTTPS URL)
-
-> [!IMPORTANT]
-> Telegram webhook sirf **public HTTPS URL** par kaam karta hai.  
-> `localhost` par kaam nahi karega! Deploy karna padega.
-
-**Option A — Vercel (Recommended, free):**
-```bash
-# Vercel CLI install
-npm i -g vercel
-
-# Project root mein:
-vercel
-
-# Env vars set karo:
-vercel env add TELEGRAM_BOT_TOKEN
-vercel env add TELEGRAM_SECRET_TOKEN
-vercel env add TELEGRAM_ALLOWED_USER_ID
-vercel env add SUPABASE_SERVICE_ROLE_KEY
-vercel env add BOT_DEFAULT_USER_ID
-```
-
-**Option B — Local testing ke liye ngrok:**
-```bash
-# ngrok install karo: https://ngrok.com
-ngrok http 3000
-
-# Milega kuch aisa:
-# https://abc123.ngrok-free.app
+# Webhook Security (Random String)
+TELEGRAM_SECRET_TOKEN=mera_random_secret_123
 ```
 
 ---
 
-## 📋 Step 8 — Webhook Register Karo (Telegram ko URL batao)
+## 📋 Step 2 — Database Migration
 
-Apna deployed URL ready hai? Ab Telegram ko batao:
+Multi-user support ke liye `profiles` table ko update karna padega taaki IDs store ho sakein.
+
+**Run in Supabase SQL Editor:**
+```sql
+alter table public.profiles
+  add column if not exists telegram_id text unique,
+  add column if not exists telegram_link_token text unique;
+
+create index if not exists idx_profiles_telegram_id on public.profiles (telegram_id);
+```
+
+---
+
+## 📋 Step 3 — Bot Linking Flow (User Perspective)
+
+Ab bot restrict nahi hai, koi bhi ye steps follow karke use link kar sakta hai:
+
+1.  **Website par jao:** Login karke **Profile** page par jao.
+2.  **Link Telegram:** "Link Telegram Account" button par click karo.
+3.  **Token Copy:** Aapko ek command milegi, e.g., `/start DRH-7F8E3A`.
+4.  **Bot par jao:** Telegram bot kholo aur wahi command paste kardo.
+5.  **Success:** Bot reply karega: *"✅ Linked Successfully!"*
+
+---
+
+## 📋 Step 4 — Webhook Register Karo
+
+Agar aapne URL change kiya hai ya pehli baar kar rahe hain:
 
 ```bash
-# Browser mein yeh URL paste karo ya curl se run karo:
-
-curl "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook" \
+curl "https://api.telegram.org/bot<YOUR_TOKEN>/setWebhook" \
   -d "url=https://YOUR_DOMAIN.vercel.app/api/telegram/webhook" \
   -d "secret_token=mera_random_secret_123"
 ```
 
-**Response agar sahi gaya:**
-```json
-{"ok": true, "result": true, "description": "Webhook was set"}
-```
+---
 
-**Verify karo:**
-```bash
-curl "https://api.telegram.org/bot<TOKEN>/getWebhookInfo"
-```
+## 📋 Step 5 — Implementation Highlights (Code)
+
+### 1. Linking API (`/api/telegram/generate-token`)
+Yeh API user ke liye unique code generate karti hai aur profile mein save karti hai.
+
+### 2. Deep-Link Webhook
+Humne `/start` command ko smart banaya hai. Agar user `/start <token>` bhejta hai, toh bot database lookup karke linking complete kar deta hai.
+
+### 3. Smart Lookup
+Jab koi link aata hai, bot `message.from.id` ko find karta hai `profiles` table mein. Isse use pata chalta hai ki reel kiski vault mein save karni hai.
 
 ---
 
-## 📋 Step 9 — Test Karo!
+## 🔁 Clean-up Check
 
-1. Telegram kholo
-2. Apna bot dhundo (`@reelsvault_bot`)
-3. `/start` bhejo — greeting milega
-4. Koi Instagram reel link paste karo:
-   ```
-   https://www.instagram.com/reel/ABC123/
-   ```
-5. Bot reply karega: `✅ Saved! [Reel Title]`
-6. Website → Reels Vault → Naya reel appear! 🎉
+Ab aap in variables ko remove kar sakte hain (Useless ENVs):
+- ❌ `TELEGRAM_ALLOWED_USER_ID`: Ab bot database se ID dekhta hai.
+- ❌ `BOT_DEFAULT_USER_ID`: Ab bot owner ke user_id ki jagah har user ka apna ID use karta hai.
 
 ---
 
-## 🔁 Reusable Pattern — Kisi bhi Bot ke liye
+## 🐛 Troubleshooting
 
-Aage kabhi bhi naya bot banana ho toh yahi steps:
-
-```
-Step 1: @BotFather → /newbot → TOKEN lao
-Step 2: @userinfobot → apna USER_ID lao
-Step 3: Webhook route banao  →  /api/<service>/webhook/route.ts
-Step 4: Env vars set karo
-Step 5: Deploy karo (Vercel/ngrok)
-Step 6: setWebhook API call karo
-Step 7: Test!
-```
-
-### Webhook Route Template (Copy karo kisi bhi project mein):
-
-```typescript
-// app/api/<botname>/webhook/route.ts
-export async function POST(req: Request) {
-  // 1. Verify secret token
-  if (req.headers.get("x-telegram-bot-api-secret-token") !== process.env.SECRET)
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-
-  const { message } = await req.json();
-  const chatId = message.chat.id;
-  const text = message.text || "";
-
-  // 2. Your logic here
-  // ...
-
-  // 3. Reply
-  await fetch(`https://api.telegram.org/bot${process.env.TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, text: "Done!" }),
-  });
-
-  return Response.json({ ok: true });
-}
-```
+| Problem | Solution |
+|---------|----------|
+| Bot says "Account Not Linked" | Profile page par ja kar naya token generate karein aur `/start <TOKEN>` bhejien. |
+| DB Error (Foreign Key) | Ensure karein ki user website par already registered/logged-in hai. |
+| Webhook Mismatch | Ensure `TELEGRAM_SECRET_TOKEN` Vercel aur `setWebhook` command mein exact match ho. |
 
 ---
 
-## 🐛 Common Errors & Fixes
-
-| Error | Cause | Fix |
-|-------|-------|-----|
-| `401 Unauthorized` | Secret token mismatch | `.env` mein `TELEGRAM_SECRET_TOKEN` check karo |
-| Bot reply nahi karta | Webhook registered nahi | Step 8 dobara karo, `getWebhookInfo` check karo |
-| `user_id violation` | `BOT_DEFAULT_USER_ID` missing/wrong | Supabase Auth se sahi UUID lo |
-| `permission denied for table reels` | Service role key missing | `SUPABASE_SERVICE_ROLE_KEY` set karo |
-| Localhost pe kaam nahi | Webhook needs public URL | ngrok ya Vercel use karo |
-
----
-
-## 📱 Mobile Workflow (Final UX)
-
-```
-Instagram app → Share → Telegram → @reelsvault_bot
-                                          ↓
-                              Bot: "✅ Saved! [Title]"
-                                          ↓
-                        Website pe visit karo → Reel dikhega!
-```
-
-Total time: **~3 seconds** vs pehle ka 30-second copy-paste flow 🚀
+### 📱 Final UX Workflow
+**User 1** saves a reel → Website shows it in User 1's vault.  
+**User 2** saves a reel → Website shows it in User 2's vault.  
+**Total Security + Multi-user scalability!** 🚀
