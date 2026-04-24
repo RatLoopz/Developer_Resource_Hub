@@ -17,6 +17,9 @@ export function SiteHeader() {
           <Link className="text-neutral-700 hover:text-neutral-900" href="/">
             {"Home"}
           </Link>
+          <Link className="text-neutral-700 hover:text-neutral-900 font-medium" href="/reels">
+            {"Reels Vault"}
+          </Link>
           <UserMenu />
         </nav>
       </div>
