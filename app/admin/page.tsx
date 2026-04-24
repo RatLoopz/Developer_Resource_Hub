@@ -17,8 +17,8 @@ import {
   DialogTitle, DialogFooter,
 } from "@/components/ui/dialog"
 import {
-  Loader2, AlertCircle, Trash2, CheckCircle2, XCircle,
-  Edit2, ExternalLink, Users, Link2, Film, BarChart3,
+  Loader2, AlertCircle, Trash2, Edit2, ExternalLink,
+  Users, Link2, Film, BarChart3, ArrowRight,
 } from "lucide-react"
 
 type TabId = "overview" | "links" | "reels" | "users"
@@ -31,15 +31,14 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
-  // Data
   const [links, setLinks] = useState<any[]>([])
   const [reels, setReels] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
 
-  // Actions
   const [updating, setUpdating] = useState<string | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<{ id: string; table: string } | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; table: "links" | "reels" | "profiles" } | null>(null)
   const [editingLink, setEditingLink] = useState<any>(null)
+  const [editingReel, setEditingReel] = useState<any>(null)
 
   useEffect(() => {
     const init = async () => {
@@ -65,17 +64,16 @@ export default function AdminPage() {
     const { data } = await supabase.from("links").select("*").order("created_at", { ascending: false })
     setLinks(data || [])
   }
-
   const fetchReels = async () => {
     const { data } = await supabase.from("reels").select("*").order("created_at", { ascending: false })
     setReels(data || [])
   }
-
   const fetchUsers = async () => {
     const { data } = await supabase.from("profiles").select("*").order("created_at", { ascending: false })
     setUsers(data || [])
   }
 
+  // --- Link actions ---
   const handleStatusChange = async (linkId: string, status: string) => {
     setUpdating(linkId)
     await supabase.from("links").update({ status, updated_at: new Date().toISOString() }).eq("id", linkId)
@@ -83,18 +81,16 @@ export default function AdminPage() {
     setUpdating(null)
   }
 
-  const handleEditSave = async () => {
+  const handleEditLinkSave = async () => {
     if (!editingLink) return
     setUpdating(editingLink.id)
-    const { error } = await supabase.from("links")
-      .update({
-        name: editingLink.name,
-        url: editingLink.url,
-        description: editingLink.description,
-        categories: editingLink.categories,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", editingLink.id)
+    const { error } = await supabase.from("links").update({
+      name: editingLink.name,
+      url: editingLink.url,
+      description: editingLink.description,
+      categories: editingLink.categories,
+      updated_at: new Date().toISOString(),
+    }).eq("id", editingLink.id)
     if (!error) {
       setLinks(prev => prev.map(l => l.id === editingLink.id ? editingLink : l))
       setEditingLink(null)
@@ -102,36 +98,48 @@ export default function AdminPage() {
     setUpdating(null)
   }
 
+  // --- Reel edit ---
+  const handleEditReelSave = async () => {
+    if (!editingReel) return
+    setUpdating(editingReel.id)
+    const { error } = await supabase.from("reels").update({
+      title: editingReel.title,
+      original_url: editingReel.original_url,
+      notes: editingReel.notes,
+      updated_at: new Date().toISOString(),
+    }).eq("id", editingReel.id)
+    if (!error) {
+      setReels(prev => prev.map(r => r.id === editingReel.id ? editingReel : r))
+      setEditingReel(null)
+    }
+    setUpdating(null)
+  }
+
+  // --- Shared delete ---
   const handleDelete = async () => {
     if (!deleteTarget) return
     setUpdating(deleteTarget.id)
     await supabase.from(deleteTarget.table).delete().eq("id", deleteTarget.id)
-    if (deleteTarget.table === "links") setLinks(prev => prev.filter(l => l.id !== deleteTarget.id))
-    if (deleteTarget.table === "reels") setReels(prev => prev.filter(r => r.id !== deleteTarget.id))
+    if (deleteTarget.table === "links")    setLinks(prev  => prev.filter(l => l.id !== deleteTarget.id))
+    if (deleteTarget.table === "reels")    setReels(prev  => prev.filter(r => r.id !== deleteTarget.id))
+    if (deleteTarget.table === "profiles") setUsers(prev  => prev.filter(u => u.id !== deleteTarget.id))
     setDeleteTarget(null)
     setUpdating(null)
   }
 
-  const handleRoleChange = async (userId: string, role: string) => {
-    setUpdating(userId)
-    await supabase.from("profiles").update({ role }).eq("id", userId)
-    setUsers(prev => prev.map(u => u.id === userId ? { ...u, role } : u))
-    setUpdating(null)
-  }
-
   const stats = {
-    total: links.length,
-    active: links.filter(l => l.status === "active").length,
-    broken: links.filter(l => l.status === "broken").length,
-    reels: reels.length,
-    users: users.length,
+    total:   links.length,
+    active:  links.filter(l => l.status === "active").length,
+    broken:  links.filter(l => l.status === "broken").length,
+    reels:   reels.length,
+    members: users.length,
   }
 
   const TABS: { id: TabId; label: string; icon: React.ReactNode; count?: number }[] = [
     { id: "overview", label: "Overview", icon: <BarChart3 className="size-3.5" /> },
-    { id: "links",    label: "Links",    icon: <Link2 className="size-3.5" />, count: links.length },
-    { id: "reels",    label: "Reels",    icon: <Film className="size-3.5" />, count: reels.length },
-    { id: "users",    label: "Users",    icon: <Users className="size-3.5" />, count: users.length },
+    { id: "links",    label: "Links",    icon: <Link2    className="size-3.5" />, count: links.length },
+    { id: "reels",    label: "Reels",    icon: <Film     className="size-3.5" />, count: reels.length },
+    { id: "users",    label: "Users",    icon: <Users    className="size-3.5" />, count: users.length },
   ]
 
   if (loading) {
@@ -150,8 +158,7 @@ export default function AdminPage() {
       <SiteHeader />
 
       <section className="mx-auto max-w-7xl px-6 py-10">
-
-        {/* Page header */}
+        {/* Header */}
         <div className="mb-8">
           <h1 className="text-sm font-semibold text-neutral-950 tracking-widest uppercase">Admin Panel</h1>
           <p className="text-sm text-neutral-400 mt-0.5">Manage all content and users</p>
@@ -159,8 +166,7 @@ export default function AdminPage() {
 
         {error && (
           <div className="flex items-center gap-2 text-xs text-red-700 bg-red-50 px-3 py-2.5 rounded-lg mb-6">
-            <AlertCircle className="size-3.5 shrink-0" />
-            {error}
+            <AlertCircle className="size-3.5 shrink-0" /> {error}
           </div>
         )}
 
@@ -187,25 +193,34 @@ export default function AdminPage() {
           ))}
         </div>
 
-        {/* ── OVERVIEW ── */}
+        {/* ────── OVERVIEW ────── */}
         {tab === "overview" && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {/* Clickable stat cards */}
             {[
-              { label: "Total Links",   value: stats.total,  color: "text-neutral-900" },
-              { label: "Active Links",  value: stats.active, color: "text-green-700"   },
-              { label: "Broken Links",  value: stats.broken, color: "text-red-600"     },
-              { label: "Saved Reels",   value: stats.reels,  color: "text-neutral-900" },
-              { label: "Total Members", value: stats.users,  color: "text-neutral-900" },
+              { label: "Total Links",    value: stats.total,   color: "text-neutral-900", target: "links"    as TabId, sub: "All submitted resources"   },
+              { label: "Active Links",   value: stats.active,  color: "text-green-700",   target: "links"    as TabId, sub: "Live and visible"           },
+              { label: "Broken Links",   value: stats.broken,  color: "text-red-600",     target: "links"    as TabId, sub: "Needs review"               },
+              { label: "Saved Reels",    value: stats.reels,   color: "text-neutral-900", target: "reels"    as TabId, sub: "Instagram reel links"       },
+              { label: "Total Members",  value: stats.members, color: "text-neutral-900", target: "users"    as TabId, sub: "Registered accounts"        },
             ].map(s => (
-              <div key={s.label} className="border border-neutral-200 rounded-xl p-5">
-                <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-xs text-neutral-400 mt-1">{s.label}</p>
-              </div>
+              <button
+                key={s.label}
+                onClick={() => setTab(s.target)}
+                className="group text-left border border-neutral-200 rounded-xl p-5 hover:border-neutral-400 hover:shadow-sm transition-all duration-150"
+              >
+                <p className={`text-2xl font-bold tabular-nums ${s.color}`}>{s.value}</p>
+                <p className="text-xs font-medium text-neutral-700 mt-1">{s.label}</p>
+                <p className="text-[11px] text-neutral-400 mt-0.5">{s.sub}</p>
+                <div className="mt-3 flex items-center gap-1 text-[10px] text-neutral-400 group-hover:text-neutral-700 transition-colors">
+                  View <ArrowRight className="size-3" />
+                </div>
+              </button>
             ))}
           </div>
         )}
 
-        {/* ── LINKS ── */}
+        {/* ────── LINKS ────── */}
         {tab === "links" && (
           <div className="space-y-2">
             {links.length === 0 ? (
@@ -215,38 +230,32 @@ export default function AdminPage() {
                 key={link.id}
                 className="flex items-center gap-4 border border-neutral-200 rounded-xl px-4 py-3 hover:border-neutral-300 transition-colors"
               >
-                {/* Status dot */}
                 <span className={`size-2 rounded-full shrink-0 ${
                   link.status === "active" ? "bg-green-500"
                   : link.status === "broken" ? "bg-red-400"
                   : "bg-neutral-300"
                 }`} />
 
-                {/* Name + URL */}
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-neutral-800 truncate">{link.name}</p>
                   <a
                     href={link.url} target="_blank" rel="noopener noreferrer"
-                    className="text-[11px] text-neutral-400 hover:text-neutral-600 truncate flex items-center gap-1 max-w-xs"
                     onClick={e => e.stopPropagation()}
+                    className="text-[11px] text-neutral-400 hover:text-neutral-600 flex items-center gap-1 truncate"
                   >
-                    {link.url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]}
-                    <ExternalLink className="size-2.5" />
+                    {(() => { try { return new URL(link.url).hostname.replace("www.", "") } catch { return link.url } })()}
+                    <ExternalLink className="size-2.5 shrink-0" />
                   </a>
                 </div>
 
-                {/* Categories */}
                 <div className="hidden sm:flex gap-1 flex-wrap max-w-[180px]">
                   {(link.categories || []).slice(0, 2).map((c: string) => (
                     <Badge key={c} variant="secondary"
                       className="bg-neutral-100 text-neutral-500 border-0 text-[9px] px-1.5 py-0 rounded font-normal"
-                    >
-                      {c}
-                    </Badge>
+                    >{c}</Badge>
                   ))}
                 </div>
 
-                {/* Status toggle */}
                 <div className="flex gap-1 shrink-0">
                   <button
                     onClick={() => handleStatusChange(link.id, link.status === "active" ? "inactive" : "active")}
@@ -272,7 +281,6 @@ export default function AdminPage() {
                   </button>
                 </div>
 
-                {/* Edit / Delete */}
                 <div className="flex gap-1 shrink-0">
                   <button
                     onClick={() => setEditingLink({ ...link })}
@@ -292,7 +300,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ── REELS ── */}
+        {/* ────── REELS ────── */}
         {tab === "reels" && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {reels.length === 0 ? (
@@ -300,7 +308,7 @@ export default function AdminPage() {
             ) : reels.map(reel => (
               <div
                 key={reel.id}
-                className="border border-neutral-200 rounded-xl overflow-hidden bg-white hover:border-neutral-300 transition-colors group"
+                className="border border-neutral-200 rounded-xl overflow-hidden bg-white hover:border-neutral-300 transition-colors"
               >
                 <div className="relative aspect-[9/16] bg-neutral-100">
                   {reel.thumbnail_url ? (
@@ -312,16 +320,24 @@ export default function AdminPage() {
                   )}
                 </div>
                 <div className="p-2.5">
-                  <p className="text-[11px] font-medium text-neutral-700 line-clamp-1">{reel.title || "Reel"}</p>
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-[10px] text-neutral-400">
-                      {new Date(reel.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
-                    </span>
+                  <p className="text-[11px] font-medium text-neutral-700 line-clamp-1">
+                    {reel.title || "Untitled Reel"}
+                  </p>
+                  <p className="text-[10px] text-neutral-400 mt-0.5">
+                    {new Date(reel.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                  </p>
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <button
+                      onClick={() => setEditingReel({ ...reel })}
+                      className="flex-1 text-[10px] font-medium py-1 rounded-md bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition-colors flex items-center justify-center gap-1"
+                    >
+                      <Edit2 className="size-3" /> Edit
+                    </button>
                     <button
                       onClick={() => setDeleteTarget({ id: reel.id, table: "reels" })}
-                      className="p-1 rounded text-neutral-300 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      className="flex-1 text-[10px] font-medium py-1 rounded-md bg-red-50 text-red-600 hover:bg-red-100 transition-colors flex items-center justify-center gap-1"
                     >
-                      <Trash2 className="size-3" />
+                      <Trash2 className="size-3" /> Delete
                     </button>
                   </div>
                 </div>
@@ -330,14 +346,14 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ── USERS ── */}
+        {/* ────── USERS ────── */}
         {tab === "users" && (
           <div className="space-y-2">
             {users.length === 0 ? (
               <p className="text-sm text-neutral-400 py-12 text-center">No users found.</p>
             ) : users.map(u => (
               <div key={u.id} className="flex items-center gap-4 border border-neutral-200 rounded-xl px-4 py-3">
-                {/* Avatar */}
+                {/* Avatar initials */}
                 <div className="size-8 rounded-lg bg-neutral-950 text-white flex items-center justify-center text-xs font-semibold shrink-0 select-none">
                   {(u.full_name || u.email || "U").slice(0, 2).toUpperCase()}
                 </div>
@@ -348,50 +364,54 @@ export default function AdminPage() {
                   <p className="text-[11px] text-neutral-400 truncate">{u.email}</p>
                 </div>
 
-                {/* Joined */}
+                {/* Joined date */}
                 <span className="hidden sm:block text-[11px] text-neutral-400 shrink-0">
                   {new Date(u.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
                 </span>
 
-                {/* Role toggle */}
-                <div className="flex gap-1 shrink-0">
-                  <button
-                    onClick={() => handleRoleChange(u.id, u.role === "admin" ? "user" : "admin")}
-                    disabled={updating === u.id}
-                    className={`text-[10px] font-medium px-2.5 py-1 rounded-md transition-colors ${
-                      u.role === "admin"
-                        ? "bg-amber-50 text-amber-700 hover:bg-amber-100"
-                        : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200"
-                    }`}
-                  >
-                    {updating === u.id
-                      ? <Loader2 className="size-3 animate-spin inline" />
-                      : u.role === "admin" ? "Admin" : "Member"}
-                  </button>
-                </div>
+                {/* Role badge — display-only, no toggle */}
+                <span className={`text-[10px] font-medium px-2.5 py-1 rounded-md shrink-0 ${
+                  u.role === "admin"
+                    ? "bg-amber-50 text-amber-700"
+                    : "bg-neutral-100 text-neutral-500"
+                }`}>
+                  {u.role === "admin" ? "Admin" : "Member"}
+                </span>
+
+                {/* Delete user */}
+                <button
+                  onClick={() => setDeleteTarget({ id: u.id, table: "profiles" })}
+                  disabled={u.role === "admin"}
+                  title={u.role === "admin" ? "Cannot delete admin" : "Delete user"}
+                  className="p-1.5 rounded-md text-neutral-300 hover:text-red-600 hover:bg-red-50 transition-colors disabled:pointer-events-none"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
               </div>
             ))}
           </div>
         )}
       </section>
 
-      {/* Delete confirm dialog */}
+      {/* ── Delete confirm ── */}
       <AlertDialog open={!!deleteTarget} onOpenChange={open => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
           <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone.
+            {deleteTarget?.table === "profiles"
+              ? "This will remove the user's profile. Their auth account may still exist."
+              : "This action cannot be undone."}
           </AlertDialogDescription>
           <div className="flex gap-3 justify-end">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
-              Delete
+              {updating ? <Loader2 className="size-3.5 animate-spin" /> : "Delete"}
             </AlertDialogAction>
           </div>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit link dialog */}
+      {/* ── Edit Link dialog ── */}
       <Dialog open={!!editingLink} onOpenChange={open => !open && setEditingLink(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -399,24 +419,34 @@ export default function AdminPage() {
           </DialogHeader>
           {editingLink && (
             <div className="space-y-4 mt-2">
+              {[
+                { label: "Name",        key: "name",        type: "input"    },
+                { label: "URL",         key: "url",         type: "input"    },
+                { label: "Description", key: "description", type: "textarea" },
+              ].map(field => (
+                <div key={field.key}>
+                  <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">
+                    {field.label}
+                  </label>
+                  {field.type === "textarea" ? (
+                    <Textarea
+                      value={editingLink[field.key] ?? ""}
+                      onChange={e => setEditingLink({ ...editingLink, [field.key]: e.target.value })}
+                      rows={3} className="resize-none text-sm"
+                    />
+                  ) : (
+                    <Input
+                      value={editingLink[field.key] ?? ""}
+                      onChange={e => setEditingLink({ ...editingLink, [field.key]: e.target.value })}
+                      className="text-sm"
+                    />
+                  )}
+                </div>
+              ))}
               <div>
-                <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">Name</label>
-                <Input value={editingLink.name}
-                  onChange={e => setEditingLink({ ...editingLink, name: e.target.value })} />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">URL</label>
-                <Input value={editingLink.url}
-                  onChange={e => setEditingLink({ ...editingLink, url: e.target.value })} />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">Description</label>
-                <Textarea value={editingLink.description}
-                  onChange={e => setEditingLink({ ...editingLink, description: e.target.value })}
-                  rows={3} className="resize-none" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">Categories (comma-separated)</label>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">
+                  Categories (comma-separated)
+                </label>
                 <Input
                   value={(editingLink.categories || []).join(", ")}
                   onChange={e => setEditingLink({
@@ -424,15 +454,67 @@ export default function AdminPage() {
                     categories: e.target.value.split(",").map((c: string) => c.trim()).filter(Boolean),
                   })}
                   placeholder="AI, Tools, Productivity"
+                  className="text-sm"
                 />
               </div>
             </div>
           )}
           <DialogFooter className="mt-4">
-            <Button variant="outline" onClick={() => setEditingLink(null)} size="sm">Cancel</Button>
-            <Button onClick={handleEditSave} disabled={updating === editingLink?.id} size="sm"
+            <Button variant="outline" size="sm" onClick={() => setEditingLink(null)}>Cancel</Button>
+            <Button size="sm" onClick={handleEditLinkSave} disabled={updating === editingLink?.id}
               className="bg-neutral-950 text-white hover:bg-neutral-800">
               {updating === editingLink?.id ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Edit Reel dialog ── */}
+      <Dialog open={!!editingReel} onOpenChange={open => !open && setEditingReel(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Reel</DialogTitle>
+          </DialogHeader>
+          {editingReel && (
+            <div className="space-y-4 mt-2">
+              {/* Thumbnail preview */}
+              {editingReel.thumbnail_url && (
+                <div className="relative h-36 w-full overflow-hidden rounded-lg border border-neutral-200">
+                  <img src={editingReel.thumbnail_url} alt="thumb" className="w-full h-full object-cover opacity-80" />
+                </div>
+              )}
+              <div>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">Title</label>
+                <Input
+                  value={editingReel.title ?? ""}
+                  onChange={e => setEditingReel({ ...editingReel, title: e.target.value })}
+                  className="text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">Instagram URL</label>
+                <Input
+                  value={editingReel.original_url ?? ""}
+                  onChange={e => setEditingReel({ ...editingReel, original_url: e.target.value })}
+                  className="text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5 uppercase tracking-wide">Note</label>
+                <Textarea
+                  value={editingReel.notes ?? ""}
+                  onChange={e => setEditingReel({ ...editingReel, notes: e.target.value })}
+                  rows={2} className="resize-none text-sm"
+                  placeholder="Optional note..."
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter className="mt-4">
+            <Button variant="outline" size="sm" onClick={() => setEditingReel(null)}>Cancel</Button>
+            <Button size="sm" onClick={handleEditReelSave} disabled={updating === editingReel?.id}
+              className="bg-neutral-950 text-white hover:bg-neutral-800">
+              {updating === editingReel?.id ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
