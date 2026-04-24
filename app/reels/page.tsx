@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createBrowserClient } from "@supabase/ssr";
-import { Play, Plus } from "lucide-react";
+import { Play, Plus, Trash2 } from "lucide-react";
 
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ type Reel = {
   thumbnail_url: string | null;
   title: string | null;
   notes: string | null;
+  user_id: string;
   created_at: string;
 };
 
@@ -32,7 +33,10 @@ export default function ReelsPage() {
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [fetchingMeta, setFetchingMeta] = useState(false);
-  const [meta, setMeta] = useState<{ title: string; thumbnail_url: string } | null>(null);
+  const [meta, setMeta] = useState<{
+    title: string;
+    thumbnail_url: string;
+  } | null>(null);
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -47,7 +51,9 @@ export default function ReelsPage() {
   }, []);
 
   const fetchSession = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (session) setUserId(session.user.id);
   };
 
@@ -55,7 +61,9 @@ export default function ReelsPage() {
     // Public fetch — no user filter, all reels visible
     const { data } = await supabase
       .from("reels")
-      .select("id, original_url, thumbnail_url, title, notes, created_at")
+      .select(
+        "id, original_url, thumbnail_url, title, notes, user_id, created_at",
+      )
       .order("created_at", { ascending: false });
     if (data) setReels(data);
   };
@@ -116,12 +124,22 @@ export default function ReelsPage() {
     setLoading(false);
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this reel?")) return;
+    try {
+      const { error } = await supabase.from("reels").delete().eq("id", id);
+      if (error) throw error;
+      setReels(reels.filter((r) => r.id !== id));
+    } catch (e: any) {
+      alert("Error deleting reel: " + e.message);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <SiteHeader />
 
       <section className="mx-auto max-w-7xl px-6 py-10">
-
         {/* Page header row */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -129,7 +147,8 @@ export default function ReelsPage() {
               Reels Vault
             </h1>
             <p className="text-sm text-neutral-400 mt-0.5">
-              {reels.length} reel{reels.length !== 1 ? "s" : ""} saved — click to watch on Instagram
+              {reels.length} reel{reels.length !== 1 ? "s" : ""} saved — click
+              to watch on Instagram
             </p>
           </div>
 
@@ -197,7 +216,13 @@ export default function ReelsPage() {
             </Dialog>
           ) : (
             <p className="text-xs text-neutral-400">
-              <a href="/auth/login" className="underline underline-offset-2 hover:text-neutral-700">Log in</a> to save reels
+              <a
+                href="/auth/login"
+                className="underline underline-offset-2 hover:text-neutral-700"
+              >
+                Log in
+              </a>{" "}
+              to save reels
             </p>
           )}
         </div>
@@ -224,9 +249,8 @@ export default function ReelsPage() {
               >
                 {/* Card */}
                 <div className="border border-neutral-200 rounded-xl overflow-hidden bg-white hover:border-neutral-400 hover:shadow-md transition-all duration-150">
-                  
                   {/* Thumbnail */}
-                  <div className="relative aspect-[9/16] bg-neutral-100">
+                  <div className="relative aspect-9/16 bg-neutral-100">
                     {reel.thumbnail_url ? (
                       <img
                         src={reel.thumbnail_url}
@@ -244,6 +268,21 @@ export default function ReelsPage() {
                         <Play className="size-4 text-neutral-900 ml-0.5" />
                       </div>
                     </div>
+
+                    {/* Delete button (Owner only) */}
+                    {userId === reel.user_id && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDelete(reel.id);
+                        }}
+                        className="absolute top-2 right-2 p-2 rounded-lg bg-white/10 hover:bg-red-500 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-sm"
+                        title="Delete Reel"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+                    )}
                   </div>
 
                   {/* Info */}
@@ -267,10 +306,13 @@ export default function ReelsPage() {
                         Reel
                       </Badge>
                       <span className="text-[10px] text-neutral-400 tabular-nums">
-                        {new Date(reel.created_at).toLocaleDateString(undefined, {
-                          month: "short",
-                          day: "numeric",
-                        })}
+                        {new Date(reel.created_at).toLocaleDateString(
+                          undefined,
+                          {
+                            month: "short",
+                            day: "numeric",
+                          },
+                        )}
                       </span>
                     </div>
                   </div>
